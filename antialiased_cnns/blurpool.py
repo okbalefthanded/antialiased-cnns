@@ -15,7 +15,13 @@ class BlurPool(nn.Module):
         super(BlurPool, self).__init__()
         self.filt_size = filt_size
         self.pad_off = pad_off
-        self.pad_sizes = [int(1.*(filt_size-1)/2), int(np.ceil(1.*(filt_size-1)/2)), int(1.*(filt_size-1)/2), int(np.ceil(1.*(filt_size-1)/2))]
+        if len(filt_size) == 2:
+            self.pad_sizes = [int(1.*(filt_size[1]-1)/2), int(np.ceil(1.*(filt_size[1]-1)/2)), 
+                              int(1.*(filt_size[0]-1)/2), int(np.ceil(1.*(filt_size[0]-1)/2))]
+        else:
+            self.pad_sizes = [int(1.*(filt_size-1)/2), int(np.ceil(1.*(filt_size-1)/2)), 
+                              int(1.*(filt_size-1)/2), int(np.ceil(1.*(filt_size-1)/2))]
+        # self.pad_sizes = [int(1.*(filt_size-1)/2), int(np.ceil(1.*(filt_size-1)/2)), int(1.*(filt_size-1)/2), int(np.ceil(1.*(filt_size-1)/2))]
         self.pad_sizes = [pad_size+pad_off for pad_size in self.pad_sizes]
         self.stride = stride
         self.off = int((self.stride-1)/2.)
@@ -36,7 +42,10 @@ class BlurPool(nn.Module):
         elif(self.filt_size==7):    
             a = np.array([1., 6., 15., 20., 15., 6., 1.])
 
-        filt = torch.Tensor(a[:,None]*a[None,:])
+        if type(self.filt_size) is int:
+            filt = torch.Tensor(a[:,None]*a[None,:])
+        else:
+            filt = torch.Tensor(a[None,...])
         filt = filt/torch.sum(filt)
         self.register_buffer('filt', filt[None,None,:,:].repeat((self.channels,1,1,1)))
 
