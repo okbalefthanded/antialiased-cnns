@@ -16,30 +16,35 @@ class BlurPool(nn.Module):
         self.filt_size = filt_size
         self.pad_off = pad_off
         if len(filt_size) == 2:
+            filter_length = max(filt_size)
             self.pad_sizes = [int(1.*(filt_size[1]-1)/2), int(np.ceil(1.*(filt_size[1]-1)/2)), 
                               int(1.*(filt_size[0]-1)/2), int(np.ceil(1.*(filt_size[0]-1)/2))]
         else:
+            filter_length = filt_size
             self.pad_sizes = [int(1.*(filt_size-1)/2), int(np.ceil(1.*(filt_size-1)/2)), 
                               int(1.*(filt_size-1)/2), int(np.ceil(1.*(filt_size-1)/2))]
         # self.pad_sizes = [int(1.*(filt_size-1)/2), int(np.ceil(1.*(filt_size-1)/2)), int(1.*(filt_size-1)/2), int(np.ceil(1.*(filt_size-1)/2))]
         self.pad_sizes = [pad_size+pad_off for pad_size in self.pad_sizes]
         self.stride = stride
-        self.off = int((self.stride-1)/2.)
+        if len(self.stride) == 2:
+            self.off = [int((self.stride[0]-1)/2.), int((self.stride[1]-1)/2.)]
+        else:
+            self.off = int((self.stride-1)/2.)
         self.channels = channels
 
-        if(self.filt_size==1):
+        if(filter_length==1):
             a = np.array([1.,])
-        elif(self.filt_size==2):
+        elif(filter_length==2):
             a = np.array([1., 1.])
-        elif(self.filt_size==3):
+        elif(filter_length==3):
             a = np.array([1., 2., 1.])
-        elif(self.filt_size==4):    
+        elif(filter_length==4):    
             a = np.array([1., 3., 3., 1.])
-        elif(self.filt_size==5):    
+        elif(filter_length==5):    
             a = np.array([1., 4., 6., 4., 1.])
-        elif(self.filt_size==6):    
+        elif(filter_length==6):    
             a = np.array([1., 5., 10., 10., 5., 1.])
-        elif(self.filt_size==7):    
+        elif(filter_length==7):    
             a = np.array([1., 6., 15., 20., 15., 6., 1.])
 
         if type(self.filt_size) is int:
