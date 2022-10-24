@@ -17,8 +17,8 @@ class BlurPool(nn.Module):
         self.pad_off = pad_off
         if len(filt_size) == 2:
             filter_length = max(filt_size)
-            self.pad_sizes = [int(1.*(filt_size[1]-1)/2), int(np.ceil(1.*(filt_size[1]-1)/2)), 
-                              int(1.*(filt_size[0]-1)/2), int(np.ceil(1.*(filt_size[0]-1)/2))]
+            self.pad_sizes = [int(1.*(filt_size[1]-1)/2), int(np.ceil(1.*(filt_size[0]-1)/2)), 
+                              int(1.*(filt_size[1]-1)/2), int(np.ceil(1.*(filt_size[0]-1)/2))]
         else:
             filter_length = filt_size
             self.pad_sizes = [int(1.*(filt_size-1)/2), int(np.ceil(1.*(filt_size-1)/2)), 
