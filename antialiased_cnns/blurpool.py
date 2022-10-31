@@ -27,7 +27,7 @@ class BlurPool(nn.Module):
         self.pad_sizes = [pad_size+pad_off for pad_size in self.pad_sizes]
         self.stride = stride
         
-		if len(self.stride) == 2:
+        if len(self.stride) == 2:
             self.off = [int((self.stride[0]-1)/2.), int((self.stride[1]-1)/2.)]
         else:
             self.off = int((self.stride-1)/2.)
